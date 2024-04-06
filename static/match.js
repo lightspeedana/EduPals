@@ -1,10 +1,32 @@
 const gridContainer = document.querySelector(".grid-container");
+const timer = document.querySelector(".timer");
+const timerInterval = setInterval(updateTimer, 1000);
 let cards = [];
 let firstCard, secondCard;
 let lockBoard = false;
 let score = 0;
+let maxTime = 100;
+timeLeft = maxTime;
 
 document.querySelector(".score").textContent = score;
+
+function updateTimer() {
+  timer.textContent = timeLeft;
+  timeLeft--; // Decrement time by 1 second
+
+  if (timeLeft === 0) {
+    // Stop the timer interval
+    clearInterval(timerInterval);
+    alert("Time's up! Game over.");
+
+    // Reset board and stop rendering cards
+    resetBoard();
+    lockBoard = true;
+    return;
+  }
+}
+
+updateTimer();
 
 function shuffleCards() {
   let currentIndex = cards.length,
@@ -89,6 +111,7 @@ function restart() {
   resetBoard();
   shuffleCards();
   score = 0;
+  timeLeft = maxTime;
   $(".score").textContent = score;
   gridContainer.innerHTML = "";
   generateCards();
