@@ -1,14 +1,45 @@
 const gridContainer = document.querySelector(".grid-container");
 const timer = document.querySelector(".timer");
+const stars = document.querySelector(".stars");
+
 const timerInterval = setInterval(updateTimer, 1000);
 let cards = [];
 let firstCard, secondCard;
 let lockBoard = false;
 let score = 0;
+let numStars = 0;
 let maxTime = 100;
 timeLeft = maxTime;
 
 document.querySelector(".score").textContent = score;
+
+function updateStars(){
+  if (numStars == 0) {
+    stars.innerHTML = `<div class="h-stack">
+        <img src="../static/assets/emptyStar.png" style="width: 10%; height: 10%;" />
+        <img src="../static/assets/emptyStar.png" style="width: 10%; height: 10%;" />
+        <img src="../static/assets/emptyStar.png" style="width: 10%; height: 10%;" />
+    </div>`;
+} else if (numStars == 1) {
+    stars.innerHTML = `<div class="h-stack">
+        <img src="../static/assets/filledStar.png" style="width: 10%; height: 10%;" />
+        <img src="../static/assets/emptyStar.png" style="width: 10%; height: 10%;" />
+        <img src="../static/assets/emptyStar.png" style="width: 10%; height: 10%;" />
+    </div>`;
+} else if (numStars == 2) {
+    stars.innerHTML = `<div class="h-stack">
+        <img src="../static/assets/filledStar.png" style="width: 10%; height: 10%;" />
+        <img src="../static/assets/filledStar.png" style="width: 10%; height: 10%;" />
+        <img src="../static/assets/emptyStar.png" style="width: 10%; height: 10%;" />
+    </div>`;
+} else {
+    stars.innerHTML = `<div class="h-stack">
+        <img src="../static/assets/filledStar.png" style="width: 10%; height: 10%;" />
+        <img src="../static/assets/filledStar.png" style="width: 10%; height: 10%;" />
+        <img src="../static/assets/filledStar.png" style="width: 10%; height: 10%;" />
+    </div>`;
+}
+}
 
 function updateTimer() {
   timer.textContent = timeLeft;
@@ -27,6 +58,7 @@ function updateTimer() {
 }
 
 updateTimer();
+updateStars();
 
 function shuffleCards() {
   let currentIndex = cards.length,
@@ -86,6 +118,8 @@ function checkForMatch() {
 
 function disableCards() {
   score++;
+  numStars = Math.floor(score / 3);
+  updateStars();
   document.querySelector(".score").textContent = score;
   firstCard.removeEventListener("click", flipCard);
   secondCard.removeEventListener("click", flipCard);
@@ -111,7 +145,12 @@ function restart() {
   resetBoard();
   shuffleCards();
   score = 0;
+  numStars = 0;
+
   timeLeft = maxTime;
+  updateTimer();
+
+  updateStars();
   $(".score").textContent = score;
   gridContainer.innerHTML = "";
   generateCards();
