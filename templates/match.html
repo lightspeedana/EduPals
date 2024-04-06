@@ -6,7 +6,8 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='match.css') }}">
   </head>
   <body>
-    {% include 'navbar.html' %}
+    {% extends 'base.html' %}
+    {% block content %}
     <div class="h-stack">
       <h1>Card Match</h1>
       <div class="h-stack">
@@ -36,5 +37,4 @@
       generateCards();
 
   </script>
-  </body>
-</html>
+  {% endblock %}
