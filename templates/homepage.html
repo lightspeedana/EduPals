@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', filename='css/output.css') }}" rel="stylesheet">
+    <title>Homepage</title>
+</head>
+<body class="bg-gray-100">
+    {% include 'navbar.html' %}
+    
+    <!-- Content -->
+    <div class="flex justify-center items-center mt-5">
+        <div class="bg-white rounded-lg p-8">
+            <h1 class="text-3xl text-center">Hello, World!</h1>
+        </div>
+    </div>
+</body>
+</html>
