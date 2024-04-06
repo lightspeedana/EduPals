@@ -1,4 +1,5 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
+
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -35,7 +36,14 @@ def register():
 
 @app.route('/register_action', methods = ['POST'])
 def register_action():
-    return True
+    if (request.form['username'] != None and 
+        request.form['email'] != None and
+        request.form['password'] == request.form['confirm_password']):
+        user = User(
+            username=request.form['username'], 
+            email=request.form['email'],
+            password=request.form['password'])
+        # add to db
 
 if __name__ == '__main__':
     app.run(debug=True)
