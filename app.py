@@ -1,6 +1,15 @@
 from flask import Flask, render_template
 
+from flask_sqlalchemy import SQLAlchemy
+
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///yourdatabase.db'
+
+db = SQLAlchemy(app)
+
+# Importing models after initializing db is also a common practice
+from models import User
+
 
 @app.route('/')
 def hello():
