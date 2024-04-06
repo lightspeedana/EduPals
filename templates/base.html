@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>EduPals</title>
+</head>
+
+<body>
+    <div class="flex flex-col w-full h-screen">
+    <header class="bg-white">
+        <div class="container mx-auto px-4 py-8 flex items-center">
+      
+          <!-- logo -->
+          <div class="mr-auto md:w-48 flex-shrink-0">
+            <a href="{{ url_for('main.index') }}" >
+            <img class="h-12" src="{{url_for('static', filename='logo.png')}}" alt="">
+            </a>
+          </div>
+      
+          <!-- buttons -->
+          <nav class="contents">
+            <ul class="ml-4 xl:w-48 flex items-center justify-end">
+              <li class="ml-2 lg:ml-4 relative inline-block">
+                <a href="{{ url_for('main.index') }}" >
+                  <svg class="h-9 lg:h-10 p-2 text-purple-500" aria-hidden="true" focusable="false" data-prefix="far" data-icon="home" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z"/></svg>
+                </a>
+              </li>
+              {% if current_user.is_authenticated %}
+              <li class="ml-2 lg:ml-4 relative inline-block">
+                <a href="{{ url_for('main.profile') }}" >
+                  <!-- <div class="absolute -top-1 right-0 z-10 bg-yellow-400 text-xs font-bold px-1 py-0.5 rounded-sm">12</div> -->
+                  <svg class="h-9 lg:h-10 p-2 text-purple-500" aria-hidden="true" focusable="false" data-prefix="far" data-icon="user" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="svg-inline--fa fa-user fa-w-14 fa-9x"><path fill="currentColor" d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"></path></svg>
+                </a>
+              </li>
+              {% endif %}
+              {% if not current_user.is_authenticated %}
+              <button class="ml-2 lg:ml-4 relative bg-transparent inline-block hover:bg-purple-500 text-purple-700 font-semibold hover:text-white py-2 px-4 border border-purple-500 hover:border-transparent rounded">
+                <a href="{{ url_for('auth.signup') }}"><strong>
+                    Signup</strong>
+                  </a>
+              </button>
+              {% endif %}
+              {% if not current_user.is_authenticated %}
+              <button class="ml-2 lg:ml-4 relative inline-block bg-purple-500 hover:bg-purple-400 text-white font-bold py-2 px-4 border-b-4 border-purple-700 hover:border-purple-500 rounded">
+                <a href="{{ url_for('auth.login') }}"><strong>
+                    Login</strong>
+                  </a>
+              </button>
+              {% endif %}
+              {% if current_user.is_authenticated %}
+              <button class="ml-2 lg:ml-4 relative inline-block bg-purple-500 hover:bg-purple-400 text-white font-bold py-2 px-4 border-b-4 border-purple-700 hover:border-purple-500 rounded">
+                <a href="{{ url_for('auth.logout') }}"><strong>
+                    Logout</strong>
+                  </a>
+              </button>
+              {% endif %}
+            </ul>
+          </nav>
+        </div>
+        <hr>
+      </header>
+    
+{% block content %}
+{% endblock %}
+</div>
+</body>
+</html>
