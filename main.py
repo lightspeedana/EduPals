@@ -67,6 +67,20 @@ def review():
 
     return render_template('review.html', score=score, gameWon=gameWon)
 
+@main.route("/crossword")
+def crossword():
+    data = [
+    {"answer": "ORANGE", "desc": "Both a fruit and a colour"},
+    {"answer": "OVAL",   "desc": "Stretched circle"},
+    {"answer": "NORTHERN", "desc": "Opposite of southern"},
+    {"answer": "APPLE", "desc": "Tech company known for phones"},
+    {"answer": "STRAWBERRY", "desc": "Fruit bearing seeds on the outside"},
+    {"answer": "YELLOW", "desc": "Colour of a submarine"},
+    {"answer": "GIGANTIC", "desc": "An adjective you would use to describe something extremely large, like this description"},
+    {"answer": "CONNECTION", "desc": "A link between two things"},
+    {"answer": "ADDRESS", "desc": "Representing location"},
+    {"answer": "DICTIONARY", "desc": "Book of many words"}]
+    return render_template('crossword.html', data = data)
 
 @main.route('/profile', methods=['POST'])
 def profile_post():
