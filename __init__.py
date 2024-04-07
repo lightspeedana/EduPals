@@ -11,7 +11,7 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
 
 db = SQLAlchemy(app)
-from .models import User
+from .models import User, Product
 
 with app.app_context():
     db.create_all()

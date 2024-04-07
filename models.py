@@ -17,6 +17,14 @@ class Pal(db.Model):
     name = db.Column(db.String(1000), index=True)
     pal_type = db.Column(db.String(100))
     happiness = db.Column(db.Integer, default=3)
-    points = db.Column(db.Integer, default=0)
+    points = db.Column(db.Integer, default=1000)
     uid = db.Column(db.Integer)
+    
+class Product(db.Model):
+    __tablename__ = 'products'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), index=True)
+    description = db.Column(db.String(1000))
+    image_url = db.Column(db.String(1000))
+    points = db.Column(db.Integer)
     
