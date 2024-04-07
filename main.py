@@ -143,6 +143,7 @@ def profile_post():
               {"role": "user", "content": "I have the following lesson content. Create 10 keyword and definition pairs from this content to help create a crossword to test myself for an upcoming exam. Every key word should be written as uppercase and only one word, with no hyphens, spaces or special characters. Please write them in the format Q1: Word 1, A1: Definition 1, Q2: Word 2 and so on. "+raw['content']},
               ]
             )
+            print(data)
             data = []
             current_qa = None
             lines = completion1.choices[0].message.content.strip().split("\n")
@@ -155,6 +156,7 @@ def profile_post():
                         data.append(current_qa)
                         current_qa = None
             session['crossword_data'] = data
+            print(data)
             return redirect(url_for('main.select'))
         else:
             flash('No usable content was found in this PDF. Please try again.')
