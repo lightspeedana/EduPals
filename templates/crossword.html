@@ -3,11 +3,11 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="flex flex-col bg-blue-300">
+<div class="flex flex-col bg-purple-300">
   <div class="w-full flex justify-center" id="playarea">
-    <div class = "flex flex-col bg-blue-200">
+    <div class = "flex flex-col bg-purple-200">
       <h1 class = "text-center text-4xl font-bold text-black-400"> Crossword </h1>
-      <div class = "flex rounded bg-blue-300 border border-gray-400">
+      <div class = "flex rounded bg-purple-300 border border-gray-400">
         <div class = "w-full">
           <p class = "font-bold">Time left:</p>
           <div id = "timer"></div>
@@ -15,8 +15,8 @@
         <div class = "flex" id = "result"></div>
       </div>
       
-      <div class = "flex bg-blue-400 border border-solid border-gray-400 rounded ">
-        <button class="w-full relative bg-blue-400 py-2 px-4" onclick="checkAnswer()">Check Answers</button>   
+      <div class = "flex bg-purple-400 border border-solid border-gray-400 rounded ">
+        <button class="w-full relative bg-purple-400 py-2 px-4" onclick="checkAnswer()">Check Answers</button>   
       </div>
       <div class="py-2 w-100"id="crossword-hints"> </div>
     </div>

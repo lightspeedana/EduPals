@@ -140,7 +140,7 @@ def profile_post():
             messages=[
                 {"role": "system", "content":  
               "You are a study assistant, helping students create questions to test themselves on study material."},
-              {"role": "user", "content": "I have the following lesson content. Create 10 keyword and definition pairs from this content to help create a crossword to test myself for an upcoming exam. Every key word should be written as uppercase and only one word, with no hyphens, spaces or special characters. Please write them in the format Q1: Word 1, A1: Definition 1, Q2: Word 2 and so on. "+raw['content']},
+              {"role": "user", "content": "I have the following lesson content. Create 10 keyword and definition pairs from this content to help create a crossword to test myself for an upcoming exam. Every key word should be written as uppercase and only one word, with no hyphens, spaces or special characters. It should not be a conjunction of two words either, and should be 12 letters or less. Please write them in the format Q1: Word 1, A1: Definition 1, Q2: Word 2 and so on. "+raw['content']},
               ]
             )
             print(data)
