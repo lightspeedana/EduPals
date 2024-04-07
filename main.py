@@ -4,7 +4,6 @@ from . import db
 from .models import User, Pal, Product
 from werkzeug.utils import secure_filename
 import os
-from random import randrange
 from tika import parser
 from openai import OpenAI 
 
@@ -24,7 +23,7 @@ def profile():
         return redirect(url_for('main.create_pal'))
     else:
         pal_stats = Pal.query.filter_by(uid=current_user.id).first()
-        return render_template('profile.html', name=current_user.name, pal_name=pal_stats.name, paltype=pal_stats.pal_type, points=pal_stats.points, happiness=randrange(1, 6))
+        return render_template('profile.html', name=current_user.name, pal_name=pal_stats.name, paltype=pal_stats.pal_type, points=pal_stats.points, happiness=4)
     
 @main.route('/createpal')
 @login_required
@@ -140,7 +139,7 @@ def profile_post():
             messages=[
                 {"role": "system", "content":  
             "You are a study assistant, helping students create questions to test themselves on study material."},
-            {"role": "user", "content": "I have the following lesson content. Create 10 keyword and definition pairs from this content to create a crossword to test myself for an upcoming exam. Every key word should be maximum 12 letters, written as uppercase and only one word, with no hyphens, spaces or special characters. Don't truncate words to fit them in the character limit. Please write them in the format Q1: Word 1 <newline>A1: Definition 1 <newline>Q2: Word 2 and so on. "+raw['content']},
+            {"role": "user", "content": "I have the following lesson content. Create 10 keyword and definition pairs from this content to create a crossword. Every key word should be maximum 12 letters, written as uppercase and only one word, with no hyphens, spaces or special characters. Don't truncate or conjoin words to fit them in the character limit. Please write them in the format Q1: Word 1 <newline>A1: Definition 1 <newline>Q2: Word 2 and so on. "+raw['content']},
             ]
             )
             print(data)
