@@ -1,7 +1,7 @@
 const timer = document.getElementById("timer");
 const timerInterval = setInterval(updateTimer, 1000);
 
-let timeLeft = 100;
+let timeLeft = 300;
 let crosswordData = {};
 
 function randInt(min, max) {
@@ -346,7 +346,7 @@ function drawCrossword(crosswordInput) {
     hintItem.className = "flex items-center mb-4";
 
     const hintText = document.createElement("span");
-    hintText.className = "inline-block bg-purple-100 rounded-full mr-2"
+    hintText.className = "inline-block bg-blue-100 rounded-full mr-2"
     hintText.textContent = crosswordData.answerLocations[i].location + ": " + crosswordData.answerLocations[i].desc ;
     hintItem.appendChild(hintText);
     hintList.appendChild(hintItem);
@@ -385,9 +385,14 @@ function checkAnswer() {
 
   // test if answers are the same
   let answerCheck = true;
+  let totalSquares = 0;
   let wrongAnswers = 0;
   for (let i = 0; i < crosswordData.solutionGrid.length; i++) {
     for (let j = 0; j < crosswordData.solutionGrid[i].length; j++) {
+      if (crosswordData.solutionGrid[i][j] != "-") {
+        totalSquares++;
+      }
+
       if (answers[i][j] != crosswordData.solutionGrid[i][j]) {
         //TODO: Should be able to update the exact squares that are wrong here
         answerCheck = false;
@@ -403,8 +408,11 @@ function checkAnswer() {
   else {
     result.textContent = "Incorrect Letters: " + wrongAnswers;
   }
-  //TODO: Something for the win condition here
   
+  if (timeLeft == 0 || answerCheck) {
+    let score = Math.floor(20 * (1 - (wrongAnswers / totalSquares)));
+    window.location.href = '/review?score=' + score + '&won=' + answerCheck;
+  }
 }
 
 function updateTimer() {
@@ -414,8 +422,7 @@ function updateTimer() {
   if (timeLeft === 0) {
     // Stop the timer interval
     clearInterval(timerInterval);
-    alert("Time's up! Game over.");
-
-    return;
+    checkAnswer();
   }
 }
+
