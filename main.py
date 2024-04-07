@@ -52,8 +52,8 @@ def create_pal_post():
 @main.route("/match")
 @login_required
 def match():
-    data = session.get('data', None)
-    session['data'] = None
+    data = session.get('match_data', None)
+    session['match_data'] = None
 
     return render_template('match.html', data = data)
 
@@ -101,17 +101,8 @@ def review():
 
 @main.route("/crossword")
 def crossword():
-    data = [
-    {"answer": "ORANGE", "desc": "Both a fruit and a colour"},
-    {"answer": "OVAL",   "desc": "Stretched circle"},
-    {"answer": "NORTHERN", "desc": "Opposite of southern"},
-    {"answer": "APPLE", "desc": "Tech company known for phones"},
-    {"answer": "STRAWBERRY", "desc": "Fruit bearing seeds on the outside"},
-    {"answer": "YELLOW", "desc": "Colour of a submarine"},
-    {"answer": "GIGANTIC", "desc": "An adjective you would use to describe something extremely large, like this description"},
-    {"answer": "CONNECTION", "desc": "A link between two things"},
-    {"answer": "ADDRESS", "desc": "Representing location"},
-    {"answer": "DICTIONARY", "desc": "Book of many words"}]
+    data = session.get('crossword_data', None)
+    session['crossword_data'] = None
     return render_template('crossword.html', data = data)
 
 @main.route('/profile', methods=['POST'])
@@ -131,24 +122,50 @@ def profile_post():
             messages=[
                 {"role": "system", "content":  
               "You are a study assistant, helping students create questions to test themselves on study material."},
-              {"role": "user", "content": "I have the following lesson content. Create 9 question and answer pairs from this content to help test myself for an upcoming exam. Every question and every answer should each have a limit of 70 characters. Please write them in the format Q1: Question 1, A1: Answer 1, Q2: Question 2 and so on. "+raw['content']}, 
-            ]
+              {"role": "user", "content": "I have the following lesson content. Create 9 question and answer pairs from this content to help test myself for an upcoming exam. Every question and every answer should each have a limit of 70 characters. Please write them in the format Q1: Question 1, A1: Answer 1, Q2: Question 2 and so on. "+raw['content']}
+              ]
             )
             data = []
+            
             lines = completion.choices[0].message.content.strip().split("\n")
             for line in lines:
                 line = line.strip()
                 if line != '':
                     current_qa = {"name": line.split(":")[0].strip()[1], "desc": line.split(":")[1].strip()}
                     data.append(current_qa)
-            session['data'] = data
-            return redirect(url_for('main.match'))
+            session['match_data'] = data
+
+            completion1 = client.chat.completions.create(
+            model="gpt-3.5-turbo-0125",
+            messages=[
+                {"role": "system", "content":  
+              "You are a study assistant, helping students create questions to test themselves on study material."},
+              {"role": "user", "content": "I have the following lesson content. Create 10 keyword and definition pairs from this content to help create a crossword to test myself for an upcoming exam. Every key word should be written as uppercase and only one word, with no hyphens, spaces or special characters. Please write them in the format Q1: Word 1, A1: Definition 1, Q2: Word 2 and so on. "+raw['content']},
+              ]
+            )
+            data = []
+            current_qa = None
+            lines = completion1.choices[0].message.content.strip().split("\n")
+            for line in lines:
+                if line != "":
+                    if line[0] == "Q":
+                        current_qa = {"answer": line.split(":")[1].strip(), "desc": ""}
+                    else:
+                        current_qa["desc"] += line.split(":")[1].strip()
+                        data.append(current_qa)
+                        current_qa = None
+            session['crossword_data'] = data
+            return redirect(url_for('main.select'))
         else:
             flash('No usable content was found in this PDF. Please try again.')
             return redirect(url_for('main.profile'))
     else:
         flash('Invalid file formats. Please try again.')
         return redirect(url_for('main.profile'))
+    
+@main.route('/select')
+def select():
+    return render_template('select.html')
     
 @main.route('/redeem/<int:id>')
 @login_required
