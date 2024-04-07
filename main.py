@@ -93,7 +93,10 @@ def review():
     score = request.args.get('score')
     won = request.args.get('won')
     gameWon = True if won == "1" else False
-
+    score_int = int(score)
+    pal_stats = Pal.query.filter_by(uid=current_user.id).first()
+    pal_stats.points += score_int * 10
+    db.session.commit()
     return render_template('review.html', score=score, gameWon=gameWon)
 
 @main.route("/crossword")
