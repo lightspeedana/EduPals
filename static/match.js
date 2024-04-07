@@ -9,7 +9,7 @@ let firstCard, secondCard;
 let lockBoard = false;
 let score = 0;
 let numStars = 0;
-let maxTime = 180;
+let maxTime = 40;
 timeLeft = maxTime;
 
 document.querySelector(".score").textContent = score;
