@@ -16,5 +16,7 @@ class Pal(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(1000), index=True)
     pal_type = db.Column(db.String(100))
+    happiness = db.Column(db.Integer, default=3)
+    points = db.Column(db.Integer, default=0)
     uid = db.Column(db.Integer)
     
