@@ -76,6 +76,8 @@ body {
     display: grid;
     justify-content: start; /* Align items to the left */
     margin-left: auto; /* Push grid container to the right */
+    margin-top:2%;
+    margin-right:10%;
     padding: 20px;
     grid-gap: 16px;
     grid-template-columns: repeat(6, auto);
