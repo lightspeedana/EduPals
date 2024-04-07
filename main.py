@@ -4,7 +4,6 @@ from . import db
 from .models import User, Pal, Product
 from werkzeug.utils import secure_filename
 import os
-from random import randrange
 from tika import parser
 from openai import OpenAI 
 
@@ -24,7 +23,7 @@ def profile():
         return redirect(url_for('main.create_pal'))
     else:
         pal_stats = Pal.query.filter_by(uid=current_user.id).first()
-        return render_template('profile.html', name=current_user.name, pal_name=pal_stats.name, paltype=pal_stats.pal_type, points=pal_stats.points, happiness=randrange(1, 6))
+        return render_template('profile.html', name=current_user.name, pal_name=pal_stats.name, paltype=pal_stats.pal_type, points=pal_stats.points, happiness=4)
     
 @main.route('/createpal')
 @login_required
