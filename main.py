@@ -1,9 +1,15 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from . import db
 from .models import User, Pal
+from werkzeug.utils import secure_filename
+import os
+from random import randrange
 
 main = Blueprint('main', __name__)
+ALLOWED_EXTENSIONS = {'pdf'}
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @main.route('/')
 def index():
@@ -15,8 +21,8 @@ def profile():
     if current_user.has_pal == False:
         return redirect(url_for('main.create_pal'))
     else:
-        pal_stats = Pal.query.filter_by(uid=current_user.id).first() 
-        return render_template('profile.html', name=current_user.name, pal_name=pal_stats.name, paltype=pal_stats.pal_type)
+        pal_stats = Pal.query.filter_by(uid=current_user.id).first()
+        return render_template('profile.html', name=current_user.name, pal_name=pal_stats.name, paltype=pal_stats.pal_type, points=pal_stats.points, happiness=randrange(1, 6))
     
 @main.route('/createpal')
 @login_required
@@ -80,3 +86,15 @@ def crossword():
     {"answer": "address", "desc": "Representing location"},
     {"answer": "dictionary", "desc": "Book of many words"}]
     return render_template('crossword.html', data = data)
+
+@main.route('/profile', methods=['POST'])
+def profile_post():
+    upload_folder = os.environ['UPLOAD_FOLDER']
+    file1 = request.files['addfile']
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    if allowed_file(file1.filename):
+        file1.save(os.path.join(basedir, upload_folder, secure_filename(file1.filename)))
+        return redirect(url_for('main.index'))
+    else:
+        flash('Invalid file formats. Please try again.')
+        return redirect(url_for('main.profile'))
