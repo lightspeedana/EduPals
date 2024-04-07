@@ -65,3 +65,18 @@ def match():
     { "name": "9", "desc": "Processes running on different host machines can communicate by sending messages over a network." }]
 
     return render_template('match.html', data = data)
+
+@main.route("/crossword")
+def crossword():
+    data = [
+    {"answer": "orange", "desc": "Both a fruit and a colour"},
+    {"answer": "oval",   "desc": "Stretched circle"},
+    {"answer": "northern", "desc": "Opposite of southern"},
+    {"answer": "apple", "desc": "Tech company known for phones"},
+    {"answer": "strawberry", "desc": "Fruit bearing seeds on the outside"},
+    {"answer": "yellow", "desc": "Colour of a submarine"},
+    {"answer": "gigantic", "desc": "Extremely large"},
+    {"answer": "connection", "desc": "A link between two things"},
+    {"answer": "address", "desc": "Representing location"},
+    {"answer": "dictionary", "desc": "Book of many words"}]
+    return render_template('crossword.html', data = data)

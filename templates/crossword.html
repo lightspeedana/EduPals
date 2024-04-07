@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+{% extends 'base.html' %}
+{% block content %}
+<div id="hello"> Hello </div>
+<div id="test">  Test</div>
+<div class="bg-gray w-full flex" id="playarea">
+  <div class="w-100"id="crossword-hints"> </div>
+  <button onclick="checkAnswer()">Restart</button>
+
+  <div id="crossword-grid"> </div>
+</div>
+
+<meta id="my-data" data-name="{{data}}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ url_for('static', filename='crossword.js') }}"></script>
+<script>
+  var data = $('#my-data').data().name;
+  var dataArray = eval(data);
+  drawCrossword(dataArray);
+</script>
+{% endblock %}
