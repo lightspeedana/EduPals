@@ -9,34 +9,40 @@
     {% extends 'base.html' %}
     {% block content %}
     <div class="h-stack">
-      <p class="mr-4">Card Match</p>
-      <div class="h-stack mr-4">
-        <a> Timer: </a>
-        <div class="timer"></div>
+      <div class="mr-4">
+          <p>Card Match</p>
       </div>
-      
-      <p>Score: <span class="score"></span></p>
 
-      <div class="stars"></div>
-      
+      <div class="mr-4">
+          <a class="timer-text"> Timer: </a>
+          <div class="timer"></div>
+          <div class="stars"></div>
+      </div>
+
+      <div class="score-text">
+          <p>Score: <span class="score"></span></p>
+      </div>
+
+      <div class="actions">
+        <button onclick="restart()">Restart</button>
+      </div>
     </div>
     <div class="grid-container mb-3">
     </div>
-    <div class="actions">
-        <button onclick="restart()">Restart</button>
-    </div>
     <meta id="my-data" data-name="{{data}}">
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ url_for('static', filename='match.js') }}"></script>
-    <script>
-      var data = $('#my-data').data().name;
-      var dataArray = eval(data);
+  </body>
 
-      cards = [...dataArray];
-      console.log(cards);
-      shuffleCards();
-      generateCards();
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="{{ url_for('static', filename='match.js') }}"></script>
+  <script>
+    var data = $('#my-data').data().name;
+    var dataArray = eval(data);
+
+    cards = [...dataArray];
+    console.log(cards);
+    shuffleCards();
+    generateCards();
 
   </script>
   {% endblock %}

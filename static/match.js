@@ -16,34 +16,35 @@ document.querySelector(".score").textContent = score;
 
 function updateStars(){
   if (numStars == 0) {
-    stars.innerHTML = `<div class="h-stack">
-        <img src="../static/assets/emptyStar.png" style="width: 10%; height: 10%;" />
-        <img src="../static/assets/emptyStar.png" style="width: 10%; height: 10%;" />
-        <img src="../static/assets/emptyStar.png" style="width: 10%; height: 10%;" />
+    stars.innerHTML = `<div class="mr-4">
+        <img src="../static/assets/emptyStar.png" style="width: 5%; height: 5%;" />
+        <img src="../static/assets/emptyStar.png" style="width: 5%; height: 5%;" />
+        <img src="../static/assets/emptyStar.png" style="width: 5%; height: 5%;" />
     </div>`;
 } else if (numStars == 1) {
-    stars.innerHTML = `<div class="h-stack">
-        <img src="../static/assets/filledStar.png" style="width: 10%; height: 10%;" />
-        <img src="../static/assets/emptyStar.png" style="width: 10%; height: 10%;" />
-        <img src="../static/assets/emptyStar.png" style="width: 10%; height: 10%;" />
+    stars.innerHTML = `<div class="mr-4">
+        <img src="../static/assets/filledStar.png" style="width: 5%; height: 5%;" />
+        <img src="../static/assets/emptyStar.png" style="width: 5%; height: 5%;" />
+        <img src="../static/assets/emptyStar.png" style="width: 5%; height: 5%;" />
     </div>`;
 } else if (numStars == 2) {
-    stars.innerHTML = `<div class="h-stack">
-        <img src="../static/assets/filledStar.png" style="width: 10%; height: 10%;" />
-        <img src="../static/assets/filledStar.png" style="width: 10%; height: 10%;" />
-        <img src="../static/assets/emptyStar.png" style="width: 10%; height: 10%;" />
+    stars.innerHTML = `<div class="mr-4">
+        <img src="../static/assets/filledStar.png" style="width: 5%; height: 5%;" />
+        <img src="../static/assets/filledStar.png" style="width: 5%; height: 5%;" />
+        <img src="../static/assets/emptyStar.png" style="width: 5%; height: 5%;" />
     </div>`;
 } else {
-    stars.innerHTML = `<div class="h-stack">
-        <img src="../static/assets/filledStar.png" style="width: 10%; height: 10%;" />
-        <img src="../static/assets/filledStar.png" style="width: 10%; height: 10%;" />
-        <img src="../static/assets/filledStar.png" style="width: 10%; height: 10%;" />
+    stars.innerHTML = `<div class="mr-4">
+        <img src="../static/assets/filledStar.png" style="width: 5%; height: 5%;" />
+        <img src="../static/assets/filledStar.png" style="width: 5%; height: 5%;" />
+        <img src="../static/assets/filledStar.png" style="width: 5%; height: 5%;" />
     </div>`;
 }
 }
 
 function updateTimer() {
   if (timerStarted){
+    updateStars();
     timer.textContent = timeLeft;
     timeLeft--; // Decrement time by 1 second
     checkOver();
@@ -165,5 +166,3 @@ function checkOver(){
     window.location.href = '/review?score=' + score + '&won=' + won;
   }
 }
-
-updateStars();
