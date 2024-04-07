@@ -1,10 +1,12 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from flask_login import login_required, current_user
 from . import db
 from .models import User, Pal
 from werkzeug.utils import secure_filename
 import os
 from random import randrange
+from tika import parser
+from openai import OpenAI 
 
 main = Blueprint('main', __name__)
 ALLOWED_EXTENSIONS = {'pdf'}
@@ -50,25 +52,8 @@ def create_pal_post():
 @main.route("/match")
 @login_required
 def match():
-    data = [
-    { "name": "1", "desc": "What are IPv4 addresses and how are they represented?" },
-    { "name": "1", "desc": "IPv4 addresses are 32-bit numbers written as dotted decimals, e.g., 154.31.16.13." },
-    { "name": "2", "desc": "What is the goal of building network applications" },
-    { "name": "2", "desc": "The goal is to learn how to build client/server applications that communicate using sockets" },
-    { "name": "3", "desc": "What are some examples of network applications?" },
-    { "name": "3", "desc": "Examples include web, email, peer-to-peer (P2P) file sharing." },
-    { "name": "4", "desc": "What additional services might an application require from the transport layer?" },
-    { "name": "4", "desc": "An application may require additional services like reliable and in-order delivery of packets from the transport layer." },
-    { "name": "5", "desc": "How are internet devices identified?" },
-    { "name": "5", "desc": "Any internet device can be identified by IP addresses." },
-    { "name": "6", "desc": "When developing a network application, what sides of the program does a developer generally?" },
-    { "name": "6", "desc": "A developer generally has to develop both the client side and the server side of the program." },
-    { "name": "7", "desc": "What are sockets in the context of network applications?" },
-    { "name": "7", "desc": "Sockets are APIs between the application and transport layers" },
-    { "name": "8", "desc": "What are the two packages in which transport layer services are bundled in the Internet?" },
-    { "name": "8", "desc": "Transport layer services in the Internet are bundled into two packages: TCP (Transmission Control Protocol) and UDP" },
-    { "name": "9", "desc": "How can processes running on different host machines communicate?" },
-    { "name": "9", "desc": "Processes running on different host machines can communicate by sending messages over a network." }]
+    data = session.get('data', None)
+    session['data'] = None
 
     return render_template('match.html', data = data)
 
@@ -78,8 +63,33 @@ def profile_post():
     file1 = request.files['addfile']
     basedir = os.path.abspath(os.path.dirname(__file__))
     if allowed_file(file1.filename):
-        file1.save(os.path.join(basedir, upload_folder, secure_filename(file1.filename)))
-        return redirect(url_for('main.index'))
+        full_path = os.path.join(basedir, upload_folder, secure_filename(file1.filename))
+        file1.save(full_path)
+        raw = parser.from_file(full_path)
+        os.remove(full_path)
+        client = OpenAI()
+        if raw['content']: 
+            completion = client.chat.completions.create(
+            model="gpt-3.5-turbo-0125",
+            messages=[
+                {"role": "system", "content":  
+              "You are a study assistant, helping students create questions to test themselves on study material."},
+              {"role": "user", "content": "I have the following lesson content. Create 9 question and answer pairs from this content to help test myself for an upcoming exam. Every question and every answer should each have a limit of 70 characters. Please write them in the format Q1: Question 1, A1: Answer 1, Q2: Question 2 and so on. "+raw['content']}, 
+            ]
+            )
+            data = []
+            lines = completion.choices[0].message.content.strip().split("\n")
+            for line in lines:
+                line = line.strip()
+                if line != '':
+                    current_qa = {"name": line.split(":")[0].strip()[1], "desc": line.split(":")[1].strip()}
+                    data.append(current_qa)
+            session['data'] = data
+            return redirect(url_for('main.match'))
+        else:
+            flash('No usable content was found in this PDF. Please try again.')
+            return redirect(url_for('main.profile'))
     else:
         flash('Invalid file formats. Please try again.')
         return redirect(url_for('main.profile'))
+    
