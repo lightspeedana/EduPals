@@ -346,7 +346,7 @@ function drawCrossword(crosswordInput) {
     hintItem.className = "flex items-center mb-4";
 
     const hintText = document.createElement("span");
-    hintText.className = "inline-block bg-blue-100 rounded-full mr-2"
+    hintText.className = "inline-block bg-purple-100 rounded-full mr-2"
     hintText.textContent = crosswordData.answerLocations[i].location + ": " + crosswordData.answerLocations[i].desc ;
     hintItem.appendChild(hintText);
     hintList.appendChild(hintItem);
