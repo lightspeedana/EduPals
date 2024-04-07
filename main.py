@@ -87,6 +87,30 @@ def market():
     pal_stats = Pal.query.filter_by(uid=current_user.id).first()
     return render_template('market.html', points=pal_stats.points, query=Product.query.all())
 
+@main.route("/review", methods=['GET'])
+@login_required
+def review():
+    score = request.args.get('score')
+    won = request.args.get('won')
+    gameWon = True if won == "1" else False
+
+    return render_template('review.html', score=score, gameWon=gameWon)
+
+@main.route("/crossword")
+def crossword():
+    data = [
+    {"answer": "ORANGE", "desc": "Both a fruit and a colour"},
+    {"answer": "OVAL",   "desc": "Stretched circle"},
+    {"answer": "NORTHERN", "desc": "Opposite of southern"},
+    {"answer": "APPLE", "desc": "Tech company known for phones"},
+    {"answer": "STRAWBERRY", "desc": "Fruit bearing seeds on the outside"},
+    {"answer": "YELLOW", "desc": "Colour of a submarine"},
+    {"answer": "GIGANTIC", "desc": "An adjective you would use to describe something extremely large, like this description"},
+    {"answer": "CONNECTION", "desc": "A link between two things"},
+    {"answer": "ADDRESS", "desc": "Representing location"},
+    {"answer": "DICTIONARY", "desc": "Book of many words"}]
+    return render_template('crossword.html', data = data)
+
 @main.route('/profile', methods=['POST'])
 def profile_post():
     upload_folder = os.environ['UPLOAD_FOLDER']

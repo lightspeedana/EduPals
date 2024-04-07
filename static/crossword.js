@@ -1,4 +1,8 @@
+const timer = document.getElementById("timer");
+const timerInterval = setInterval(updateTimer, 1000);
 
+let timeLeft = 100;
+let crosswordData = {};
 
 function randInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -106,9 +110,9 @@ function randInt(min, max) {
     else return (a.x - b.x)
   }
   
-  function genCrossword(crosswordData) {
-    crosswordData.sort((a, b) => a.answer.length - b.answer.length).reverse();
-    maxLength = crosswordData[0].answer.length * 2;
+  function genCrossword(inputData) {
+    inputData.sort((a, b) => a.answer.length - b.answer.length).reverse();
+    maxLength = inputData[0].answer.length * 2;
 
     const answerGrid = Array.from({ length: maxLength }, () =>
     Array.from({ length: maxLength }, () => "-"),
@@ -125,39 +129,39 @@ function randInt(min, max) {
     // randomly choose if vertical or horizontal
     if (randInt(0, 1) == 0) {
       writeHor(
-        crosswordData[0].answer,
+        inputData[0].answer,
         solutionGrid,
         Math.floor(maxLength / 2),
-        Math.floor(maxLength / 2) - Math.floor(crosswordData[0].answer.length / 2),
+        Math.floor(maxLength / 2) - Math.floor(inputData[0].answer.length / 2),
       );
       answerLocations.push({
-        "answer": crosswordData[0].answer,
+        "answer": inputData[0].answer,
         "x": Math.floor(maxLength / 2),
-        "y": Math.floor(maxLength / 2) - Math.floor(crosswordData[0].answer.length / 2),
-        "length": crosswordData[0].answer.length,
+        "y": Math.floor(maxLength / 2) - Math.floor(inputData[0].answer.length / 2),
+        "length": inputData[0].answer.length,
         "orient": 1, 
         "location": "",
-        "desc": crosswordData[0].desc
+        "desc": inputData[0].desc
       });
     } else {
       writeVer(
-        crosswordData[0].answer,
+        inputData[0].answer,
         solutionGrid,
-        Math.floor(maxLength / 2) - Math.floor(crosswordData[0].answer.length / 2),
+        Math.floor(maxLength / 2) - Math.floor(inputData[0].answer.length / 2),
         Math.floor(maxLength / 2),
       );
       answerLocations.push({
-        "answer": crosswordData[0].answer,
-        "x": Math.floor(maxLength / 2) - Math.floor(crosswordData[0].answer.length / 2),
+        "answer": inputData[0].answer,
+        "x": Math.floor(maxLength / 2) - Math.floor(inputData[0].answer.length / 2),
         "y": Math.floor(maxLength / 2),
-        "length": crosswordData[0].answer.length,
+        "length": inputData[0].answer.length,
         "orient": 0,
         "location": "",
-        "desc": crosswordData[0].desc
+        "desc": inputData[0].desc
       });
     }
 
-    crosswordData.splice(0, 1);
+    inputData.splice(0, 1);
     
     let loopingPlaced = true;
 
@@ -165,8 +169,8 @@ function randInt(min, max) {
     while (loopingPlaced) {
       // attempt to place all words until there are no more valid spots
       loopingPlaced = false;
-      for (let i = 0; i < crosswordData.length; i++) {
-        let word = crosswordData[i];
+      for (let i = 0; i < inputData.length; i++) {
+        let word = inputData[i];
         let connections = [];
         // for each letter in the word
         for (let j = 0; j < word.answer.length; j++) {
@@ -205,7 +209,7 @@ function randInt(min, max) {
               "desc": word.desc
             });
             loopingPlaced = true;
-            crosswordData.splice(i, 1);
+            inputData.splice(i, 1);
             break;
           }
   
@@ -222,7 +226,7 @@ function randInt(min, max) {
               "desc": word.desc
             });
             loopingPlaced = true;
-            crosswordData.splice(i, 1);
+            inputData.splice(i, 1);
             break;
           }
         }
@@ -241,7 +245,7 @@ function randInt(min, max) {
           if (x == 0) {
             if (isNaN(answerGrid[answerLocation.x][answerLocation.y])) {
               answerGrid[answerLocation.x + x][answerLocation.y] = "" + counter
-              answerLocations[i].location = "" + counter + " Down"
+              answerLocations[i].location = counter + " Down"
               counter++;
             }
             else {
@@ -249,7 +253,7 @@ function randInt(min, max) {
             }
 
           }
-          else if (answerGrid[answerLocation.x + x][answerLocation.y] == "-") {
+          else if (isNaN(answerGrid[answerLocation.x + x][answerLocation.y])) {
             // normal cells
             answerGrid[answerLocation.x + x][answerLocation.y] = "#";
           }
@@ -262,25 +266,21 @@ function randInt(min, max) {
           if (y == 0) {
             if (isNaN(answerGrid[answerLocation.x][answerLocation.y])) {
               answerGrid[answerLocation.x][answerLocation.y + y] = "" + counter
-              answerLocations[i].location = "" + counter + " Across"
+              answerLocations[i].location = counter + " Across"
               counter++;
             }
             else {
               answerLocations[i].location = "" + answerGrid[answerLocation.x][answerLocation.y] + " Across"
             }
           }
-          else if (answerGrid[answerLocation.x][answerLocation.y + y] == "-") {
+          else if (isNaN(answerGrid[answerLocation.x][answerLocation.y + y])) {
             // normal cells
             answerGrid[answerLocation.x][answerLocation.y + y] = "#";
           }  
         }
       }
     }
-    // generate the answer grid based on the solution grid
-    // ... 
-    // need to be able to order the words in the grid by their number
-    // eg 6 down, 6 across etc
-    // index the words for solving
+
     let crosswordOutput = {
       "answerLocations": answerLocations,
       "answerGrid": answerGrid,
@@ -288,24 +288,134 @@ function randInt(min, max) {
     }
     return crosswordOutput;
   }
-  
-  const myCrosswordData = data = [
-    {"answer": "orange", "desc": "Both a fruit and a colour"},
-    {"answer": "oval",   "desc": "Stretched circle"},
-    {"answer": "northern", "desc": "Opposite of southern"},
-    {"answer": "apple", "desc": "Tech company known for phones"},
-    {"answer": "strawberry", "desc": "Fruit bearing seeds on the outside"},
-    {"answer": "yellow", "desc": "Colour of a submarine"},
-    {"answer": "gigantic", "desc": "Extremely large"},
-    {"answer": "connection", "desc": "A link between two things"},
-    {"answer": "address", "desc": "Representing location"},
-    {"answer": "dictionary", "desc": "Book of many words"}
-]
-  console.log(myCrosswordData)
-  let newCrossword = genCrossword(myCrosswordData);
 
-  console.log(newCrossword.answerLocations);
-  console.log("\n");
-  console.log(newCrossword.solutionGrid.map((row) => row.join(" ")).join("\n"));
-  console.log("\n");
-  console.log(newCrossword.answerGrid.map((row) => row.join(" ")).join("\n"));
+function drawCrossword(crosswordInput) {
+  crosswordData = genCrossword(crosswordInput);
+  
+  const table = document.createElement("table");
+  table.id = "crossword-table";
+
+  // create table from 2d array
+  for (let i = 0; i < crosswordData.solutionGrid.length; i++) {
+    const row = document.createElement("tr");
+    for (let j = 0; j < crosswordData.solutionGrid[i].length; j++) {
+      const cell = document.createElement("td")
+      const cellDiv = document.createElement("div")
+      if (crosswordData.answerGrid[i][j] == "-") {
+        cellDiv.className = "relative w-8 h-8 border border-gray-400 flex items-center justify-center bg-black";
+      } 
+      else {
+        // mark cells that will be checked for answers later
+        cell.id = "cell-answer"
+
+        cellDiv.className = "relative w-8 h-8 border border-gray-400 flex items-center justify-center bg-white";
+        const cellInput = document.createElement("input");
+        cellInput.type = "text";
+        cellInput.maxLength = "1"
+        cellInput.className = "w-full h-full border-none text-center bg-transparent";
+
+        cellInput.addEventListener('input', function(event) {
+          cellInput.value = cellInput.value.toUpperCase();
+        });
+
+        let cellMarkerText = crosswordData.answerGrid[i][j];
+
+        // give the numbered cells their numbers
+        if (cellMarkerText != "#") {
+          const cellMarker = document.createElement("span");
+          cellMarker.className ="absolute top-0 left-0 text-gray-700 p-1 text-xs";
+          cellMarker.textContent = cellMarkerText;
+          cellDiv.appendChild(cellMarker);
+        }
+
+        cellDiv.appendChild(cellInput);
+
+      }
+      
+      cell.appendChild(cellDiv);
+      row.appendChild(cell);
+    }
+    table.appendChild(row);
+  }
+  const hintDiv = document.createElement("div");
+  hintDiv.className = "overflow-y-scroll";
+  const hintList = document.createElement("ul");
+  hintList.className = "whitespace-normal list-disc pl-4";
+  for (let i = 0; i < crosswordData.answerLocations.length; i++) {
+    const hintItem = document.createElement("li");
+    hintItem.className = "flex items-center mb-4";
+
+    const hintText = document.createElement("span");
+    hintText.className = "inline-block bg-blue-100 rounded-full mr-2"
+    hintText.textContent = crosswordData.answerLocations[i].location + ": " + crosswordData.answerLocations[i].desc ;
+    hintItem.appendChild(hintText);
+    hintList.appendChild(hintItem);
+  }
+
+
+  crosswordGrid = document.getElementById("crossword-grid");
+  crosswordGrid.appendChild(table);
+
+  crosswordHints = document.getElementById("crossword-hints");
+  crosswordHints.appendChild(hintList);
+}
+
+function checkAnswer() {
+  let answers = [];
+
+  const result = document.getElementById("result");
+  const table = document.getElementById("crossword-table");
+
+  for(let i = 0; i < table.rows.length; i++) {
+    let answerRow = [];
+    const row = table.rows[i];
+    for (let j = 0; j < table.rows.length; j++) {
+      const cell = row.cells[j];
+      if (cell.id == "cell-answer") {
+        // get the input, which is in the div in the cell
+        const cellInput = cell.lastChild.lastChild;
+        answerRow.push(cellInput.value.toUpperCase());
+      }
+      else {
+        answerRow.push("-");
+      }
+    }
+    answers.push(answerRow);
+  }
+
+  // test if answers are the same
+  let answerCheck = true;
+  let wrongAnswers = 0;
+  for (let i = 0; i < crosswordData.solutionGrid.length; i++) {
+    for (let j = 0; j < crosswordData.solutionGrid[i].length; j++) {
+      if (answers[i][j] != crosswordData.solutionGrid[i][j]) {
+        //TODO: Should be able to update the exact squares that are wrong here
+        answerCheck = false;
+        wrongAnswers++;
+      }
+    }
+  }
+
+  if (answerCheck) {
+    clearInterval(timerInterval);
+    result.textContent = "Congratulations!";
+  }
+  else {
+    result.textContent = "Incorrect Letters: " + wrongAnswers;
+  }
+  //TODO: Something for the win condition here
+  
+}
+
+function updateTimer() {
+  timer.textContent = timeLeft;
+  timeLeft--; // Decrement time by 1 second
+
+  if (timeLeft === 0) {
+    // Stop the timer interval
+    clearInterval(timerInterval);
+    alert("Time's up! Game over.");
+
+    return;
+  }
+}
