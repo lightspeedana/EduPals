@@ -57,6 +57,17 @@ def match():
 
     return render_template('match.html', data = data)
 
+
+@main.route("/review", methods=['GET'])
+@login_required
+def review():
+    score = request.args.get('score')
+    won = request.args.get('won')
+    gameWon = True if won == "1" else False
+
+    return render_template('review.html', score=score, gameWon=gameWon)
+
+
 @main.route('/profile', methods=['POST'])
 def profile_post():
     upload_folder = os.environ['UPLOAD_FOLDER']

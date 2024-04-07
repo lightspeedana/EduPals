@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Review</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  </head>
+  <body class="bg-gray-800 flex justify-center items-center h-screen">
+    {% extends 'base.html' %}
+    {% block content %}
+    {% set score_int = score | int %}
+    <div class="text-white text-center">
+        {% if gameWon %}
+        <h1 class="font-medium text-4xl mb-4">You win</h1>
+        {% else %}
+        <h1 class="text-4xl mb-4">Times up!</h1>
+        {% endif %}
+
+        <div>
+            <p class="text-xl">
+                Your score was: {{ score }}
+            </p>
+
+            <p class="text-xl mt-4">Points added: {{ score_int * 10 }}</p>
+        </div>  
+    </div>
+    {% endblock %}
+  </body>
+</html>

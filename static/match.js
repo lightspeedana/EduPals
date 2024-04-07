@@ -4,11 +4,12 @@ const stars = document.querySelector(".stars");
 
 const timerInterval = setInterval(updateTimer, 1000);
 let cards = [];
+let timerStarted = false;
 let firstCard, secondCard;
 let lockBoard = false;
 let score = 0;
 let numStars = 0;
-let maxTime = 100;
+let maxTime = 180;
 timeLeft = maxTime;
 
 document.querySelector(".score").textContent = score;
@@ -42,23 +43,18 @@ function updateStars(){
 }
 
 function updateTimer() {
-  timer.textContent = timeLeft;
-  timeLeft--; // Decrement time by 1 second
+  if (timerStarted){
+    timer.textContent = timeLeft;
+    timeLeft--; // Decrement time by 1 second
+    checkOver();
+  }
 
   if (timeLeft === 0) {
-    // Stop the timer interval
-    clearInterval(timerInterval);
-    alert("Time's up! Game over.");
+    checkOver();
 
-    // Reset board and stop rendering cards
-    resetBoard();
-    lockBoard = true;
-    return;
   }
 }
 
-updateTimer();
-updateStars();
 
 function shuffleCards() {
   let currentIndex = cards.length,
@@ -93,6 +89,9 @@ function generateCards() {
 }
 
 function flipCard() {
+  timerStarted=true;
+
+
   if (lockBoard) return;
   if (this === firstCard) return;
 
@@ -145,13 +144,26 @@ function restart() {
   resetBoard();
   shuffleCards();
   score = 0;
+  document.querySelector(".score").textContent = score;
   numStars = 0;
 
   timeLeft = maxTime;
   updateTimer();
+  timerStarted=false;
 
   updateStars();
-  $(".score").textContent = score;
+
   gridContainer.innerHTML = "";
   generateCards();
 }
+
+function checkOver(){
+  if(score == Math.floor(cards.length/2) || timeLeft == 0){
+
+    var won = score === Math.floor(cards.length / 2) ? 1 : 0;
+
+    window.location.href = '/review?score=' + score + '&won=' + won;
+  }
+}
+
+updateStars();
