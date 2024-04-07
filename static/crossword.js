@@ -1,7 +1,7 @@
 const timer = document.getElementById("timer");
 const timerInterval = setInterval(updateTimer, 1000);
 
-let timeLeft = 300;
+let timeLeft = 30;
 let crosswordData = {};
 
 function randInt(min, max) {
