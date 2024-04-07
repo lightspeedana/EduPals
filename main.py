@@ -1,5 +1,7 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_required, current_user
+from . import db
+from .models import User, Pal
 
 main = Blueprint('main', __name__)
 
@@ -10,7 +12,34 @@ def index():
 @main.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html', name=current_user.name)
+    if current_user.has_pal == False:
+        return redirect(url_for('main.create_pal'))
+    else:
+        pal_stats = Pal.query.filter_by(uid=current_user.id).first() 
+        return render_template('profile.html', name=current_user.name, pal_name=pal_stats.name, paltype=pal_stats.pal_type)
+    
+@main.route('/createpal')
+@login_required
+def create_pal():
+    if current_user.has_pal == True:
+        return redirect(url_for('main.profile'))
+    else:
+        return render_template('createpal.html', name=current_user.name)
+
+@main.route('/createpal', methods=['POST'])
+def create_pal_post():
+    palname = request.form.get('name')
+    paltype = request.form.get('pal')
+    uid = current_user.id
+
+    # create a new user with the form data. Hash the password so the plaintext version isn't saved.
+    new_pal = Pal(name=palname, pal_type=paltype, uid=uid)
+    edited_user = User.query.filter_by(id=current_user.id).first() 
+    edited_user.has_pal = True
+
+    db.session.add(new_pal)
+    db.session.commit()
+    return redirect(url_for('main.profile'))
 
 @main.route("/match")
 @login_required

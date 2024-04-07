@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="pt-10 bg-white grow relative items-center">
+  <div class="px-12 mx-auto max-w-7xl">
+      <div class="w-full mx-auto text-left md:w-11/12 xl:w-9/12 md:text-center">
+          <h1 class="mb-8 text-4xl font-extrabold leading-none tracking-normal text-gray-900 md:text-6xl md:tracking-tight">
+              Create Your Pal
+          </h1>
+          <p class="px-0 mb-8 text-lg font-bold md:text-xl lg:px-24">
+            Hi {{name}}! Before you begin your learning journey, you need to select and name your pal.
+          </p>
+          <form method="POST" action="/createpal" >
+            <div class="pb-10">
+              <input type="name" id="name" name="name" placeholder="Pal Name" class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300" required>
+              <input id="palType" type="hidden" name="pal" value="alien-green" required>
+            </div>
+          <div class="columns-2">
+            <img id="palImage" class="w-full aspect-square" src="{{url_for('static', filename='alien_green.png')}}" />
+            <div class="columns-2">
+              <button id="btn1" onclick="changeClass(btn=1)" type="button" class="rounded-2xl hover:bg-purple-100 transition-colors duration-300 bg-purple-200 outline outline-2 outline-offset-2 outline-purple-500"><img id="img1" class="rounded w-36 h-36" src="{{url_for('static', filename='alien_green.png')}}"></button>
+              <button id="btn2" onclick="changeClass(btn=2)" type="button" class="rounded-2xl hover:bg-purple-100 transition-colors duration-300"><img id="img2" class="rounded w-36 h-36" src="{{url_for('static', filename='alien_purple.png')}}"></button>
+              <button id="btn3" onclick="changeClass(btn=3)" type="button" class="rounded-2xl hover:bg-purple-100 transition-colors duration-300"><img id="img3" class="rounded w-36 h-36" src="{{url_for('static', filename='alien_red.png')}}"></button>
+              <button id="btn4" onclick="changeClass(btn=4)" type="button" class="rounded-2xl hover:bg-purple-100 transition-colors duration-300"><img id="img4" class="rounded w-36 h-36" src="{{url_for('static', filename='mouse_pink.png')}}"></button>
+              <button id="btn5" onclick="changeClass(btn=5)" type="button" class="rounded-2xl hover:bg-purple-100 transition-colors duration-300"><img id="img5" class="rounded w-36 h-36" src="{{url_for('static', filename='mouse_blue.png')}}"></button>
+              <button id="btn6" onclick="changeClass(btn=6)" type="button" class="rounded-2xl hover:bg-purple-100 transition-colors duration-300"><img id="img6" class="rounded w-36 h-36" src="{{url_for('static', filename='mouse_yellow.png')}}"></button>
+            </div>
+          </div>
+          <div class="pt-8 mb-4 space-x-0 md:space-x-2 md:mb-8">
+              <button type="submit" class="inline-flex items-center justify-center w-full px-6 py-3 mb-2 text-lg text-white bg-purple-400 rounded-2xl sm:w-auto sm:mb-0">
+                  Create Your Pal
+                  <svg class="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+              </button>
+          </div>
+        </form>
+      </div>
+  </div>
+  </section>
+<script>
+  function changeClass(btn) {
+  var element = document.querySelector("#palImage");
+  var element2 = document.getElementsByClassName("bg-purple-200");
+  var element3 = document.getElementById("img"+btn);
+  var element4 = document.getElementById("btn"+btn);
+  var element5 = document.getElementById("palType");
+
+  element.src=element3.src
+  element2[0].className = "rounded-2xl hover:bg-purple-100 transition-colors duration-300";
+  element4.className = "rounded-2xl hover:bg-purple-100 transition-colors duration-300 bg-purple-200 outline outline-2 outline-offset-2 outline-purple-500";
+  element5.value = element3.src.substring(29, element3.src.length - 4);
+  }
+</script>
+{% endblock %}

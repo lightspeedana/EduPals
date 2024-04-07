@@ -9,4 +9,12 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     name = db.Column(db.String(1000))
+    has_pal = db.Column(db.Boolean, default=False)
+
+class Pal(db.Model):
+    __tablename__ = 'pals'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(1000), index=True)
+    pal_type = db.Column(db.String(100))
+    uid = db.Column(db.Integer)
     
