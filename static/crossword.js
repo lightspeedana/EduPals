@@ -1,3 +1,7 @@
+const timer = document.getElementById("timer");
+const timerInterval = setInterval(updateTimer, 1000);
+
+let timeLeft = 100;
 let crosswordData = {};
 
 function randInt(min, max) {
@@ -298,16 +302,21 @@ function drawCrossword(crosswordInput) {
       const cell = document.createElement("td")
       const cellDiv = document.createElement("div")
       if (crosswordData.answerGrid[i][j] == "-") {
-        cellDiv.className = "relative bg-black w-8 h-8 border border-gray-400 flex items-center justify-center";
+        cellDiv.className = "relative w-8 h-8 border border-gray-400 flex items-center justify-center bg-black";
       } 
       else {
         // mark cells that will be checked for answers later
         cell.id = "cell-answer"
 
-        cellDiv.className = "relative bg-white w-8 h-8 border border-gray-400 flex items-center justify-center";
+        cellDiv.className = "relative w-8 h-8 border border-gray-400 flex items-center justify-center bg-white";
         const cellInput = document.createElement("input");
         cellInput.type = "text";
-        cellInput.className = "w-full h-full border-none text-center";
+        cellInput.maxLength = "1"
+        cellInput.className = "w-full h-full border-none text-center bg-transparent";
+
+        cellInput.addEventListener('input', function(event) {
+          cellInput.value = cellInput.value.toUpperCase();
+        });
 
         let cellMarkerText = crosswordData.answerGrid[i][j];
 
@@ -328,35 +337,34 @@ function drawCrossword(crosswordInput) {
     }
     table.appendChild(row);
   }
-  const acrossDiv = document.createElement("div");
-  acrossDiv.className = "w-1/2 overflow-y-scroll";
-  const acrossList = document.createElement("ul");
-  acrossList.className = "list-disc pl-4";
+  const hintDiv = document.createElement("div");
+  hintDiv.className = "overflow-y-scroll";
+  const hintList = document.createElement("ul");
+  hintList.className = "whitespace-normal list-disc pl-4";
   for (let i = 0; i < crosswordData.answerLocations.length; i++) {
-    const acrossItem = document.createElement("li");
-    acrossItem.textContent = crosswordData.answerLocations[i].location + ": " + crosswordData.answerLocations[i].desc ;
-    acrossList.appendChild(acrossItem);
+    const hintItem = document.createElement("li");
+    hintItem.className = "flex items-center mb-4";
+
+    const hintText = document.createElement("span");
+    hintText.className = "inline-block bg-blue-100 rounded-full mr-2"
+    hintText.textContent = crosswordData.answerLocations[i].location + ": " + crosswordData.answerLocations[i].desc ;
+    hintItem.appendChild(hintText);
+    hintList.appendChild(hintItem);
   }
-  
-  /*
-  const downDiv = document.createElement("div");
-  acrossDiv.className = "w-1/2";
-  */
+
 
   crosswordGrid = document.getElementById("crossword-grid");
   crosswordGrid.appendChild(table);
 
   crosswordHints = document.getElementById("crossword-hints");
-  crosswordHints.appendChild(acrossList);
+  crosswordHints.appendChild(hintList);
 }
 
 function checkAnswer() {
   let answers = [];
 
-  const result = document.getElementById("hello");
-  const test = document.getElementById("test");
+  const result = document.getElementById("result");
   const table = document.getElementById("crossword-table");
-  console.log("Hello");
 
   for(let i = 0; i < table.rows.length; i++) {
     let answerRow = [];
@@ -366,7 +374,7 @@ function checkAnswer() {
       if (cell.id == "cell-answer") {
         // get the input, which is in the div in the cell
         const cellInput = cell.lastChild.lastChild;
-        answerRow.push(cellInput.value);
+        answerRow.push(cellInput.value.toUpperCase());
       }
       else {
         answerRow.push("-");
@@ -377,14 +385,37 @@ function checkAnswer() {
 
   // test if answers are the same
   let answerCheck = true;
+  let wrongAnswers = 0;
   for (let i = 0; i < crosswordData.solutionGrid.length; i++) {
     for (let j = 0; j < crosswordData.solutionGrid[i].length; j++) {
       if (answers[i][j] != crosswordData.solutionGrid[i][j]) {
+        //TODO: Should be able to update the exact squares that are wrong here
         answerCheck = false;
+        wrongAnswers++;
       }
     }
   }
 
-  result.textContent = answerCheck;
-  test.textContent = answers.map(row => row.join(' ')).join('!');
+  if (answerCheck) {
+    clearInterval(timerInterval);
+    result.textContent = "Congratulations!";
+  }
+  else {
+    result.textContent = "Incorrect Letters: " + wrongAnswers;
+  }
+  //TODO: Something for the win condition here
+  
+}
+
+function updateTimer() {
+  timer.textContent = timeLeft;
+  timeLeft--; // Decrement time by 1 second
+
+  if (timeLeft === 0) {
+    // Stop the timer interval
+    clearInterval(timerInterval);
+    alert("Time's up! Game over.");
+
+    return;
+  }
 }

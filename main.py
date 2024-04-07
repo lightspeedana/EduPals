@@ -60,16 +60,16 @@ def match():
 @main.route("/crossword")
 def crossword():
     data = [
-    {"answer": "orange", "desc": "Both a fruit and a colour"},
-    {"answer": "oval",   "desc": "Stretched circle"},
-    {"answer": "northern", "desc": "Opposite of southern"},
-    {"answer": "apple", "desc": "Tech company known for phones"},
-    {"answer": "strawberry", "desc": "Fruit bearing seeds on the outside"},
-    {"answer": "yellow", "desc": "Colour of a submarine"},
-    {"answer": "gigantic", "desc": "Extremely large"},
-    {"answer": "connection", "desc": "A link between two things"},
-    {"answer": "address", "desc": "Representing location"},
-    {"answer": "dictionary", "desc": "Book of many words"}]
+    {"answer": "ORANGE", "desc": "Both a fruit and a colour"},
+    {"answer": "OVAL",   "desc": "Stretched circle"},
+    {"answer": "NORTHERN", "desc": "Opposite of southern"},
+    {"answer": "APPLE", "desc": "Tech company known for phones"},
+    {"answer": "STRAWBERRY", "desc": "Fruit bearing seeds on the outside"},
+    {"answer": "YELLOW", "desc": "Colour of a submarine"},
+    {"answer": "GIGANTIC", "desc": "An adjective you would use to describe something extremely large, like this description"},
+    {"answer": "CONNECTION", "desc": "A link between two things"},
+    {"answer": "ADDRESS", "desc": "Representing location"},
+    {"answer": "DICTIONARY", "desc": "Book of many words"}]
     return render_template('crossword.html', data = data)
 
 @main.route('/profile', methods=['POST'])
