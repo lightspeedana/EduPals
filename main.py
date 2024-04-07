@@ -116,7 +116,8 @@ def profile_post():
         raw = parser.from_file(full_path)
         os.remove(full_path)
         client = OpenAI()
-        if raw['content']: 
+        if raw['content']:   
+
             completion = client.chat.completions.create(
             model="gpt-3.5-turbo-0125",
             messages=[
@@ -134,14 +135,13 @@ def profile_post():
                     current_qa = {"name": line.split(":")[0].strip()[1], "desc": line.split(":")[1].strip()}
                     data.append(current_qa)
             session['match_data'] = data
-
             completion1 = client.chat.completions.create(
             model="gpt-3.5-turbo-0125",
             messages=[
                 {"role": "system", "content":  
-              "You are a study assistant, helping students create questions to test themselves on study material."},
-              {"role": "user", "content": "I have the following lesson content. Create 10 keyword and definition pairs from this content to help create a crossword to test myself for an upcoming exam. Every key word should be written as uppercase and only one word, with no hyphens, spaces or special characters. It should not be a conjunction of two words either, and should be 12 letters or less. Please write them in the format Q1: Word 1, A1: Definition 1, Q2: Word 2 and so on. "+raw['content']},
-              ]
+            "You are a study assistant, helping students create questions to test themselves on study material."},
+            {"role": "user", "content": "I have the following lesson content. Create 10 keyword and definition pairs from this content to create a crossword to test myself for an upcoming exam. Every key word should be maximum 18 letters, written as uppercase and only one word, with no hyphens, spaces or special characters.Please write them in the format Q1: Word 1 <newline>A1: Definition 1 <newline>Q2: Word 2 and so on. "+raw['content']},
+            ]
             )
             print(data)
             data = []
